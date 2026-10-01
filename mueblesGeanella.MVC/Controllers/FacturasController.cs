@@ -1,149 +1,110 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using mueblesGeanella.CONSUMER;
 using mueblesGeanella.Modelos;
 
-public class FacturasController : Controller
+namespace mueblesGeanella.MVC.Controllers
 {
-    private readonly mueblesGeanellaMVCContext _context;
-
-    public FacturasController(mueblesGeanellaMVCContext context)
+    public class FacturasController : Controller
     {
-        _context = context;
-    }
+        // 💡 NOTA: La base de datos es administrada remotamente por la API a través del CONSUMER.
 
-    // GET: FACTURAS
-    public async Task<IActionResult> Index()    
-    {
-        return View(await _context.Factura.ToListAsync());
-    }
-
-    // GET: FACTURAS/Details/5
-    public async Task<IActionResult> Details(int? idfactura)
-    {
-        if (idfactura == null)
+        // GET: FACTURAS
+        public IActionResult Index()
         {
-            return NotFound();
+            // Solicita a la API todas las facturas registradas mediante HTTP GET
+            var lista = CRUD<Factura>.GetAll();
+            return View(lista);
         }
 
-        var factura = await _context.Factura
-            .FirstOrDefaultAsync(m => m.IdFactura == idfactura);
-        if (factura == null)
+        // GET: FACTURAS/Details/5
+        public IActionResult Details(int id)
         {
-            return NotFound();
+            var factura = CRUD<Factura>.GetById(id);
+            if (factura == null)
+            {
+                return NotFound();
+            }
+
+            return View(factura);
         }
 
-        return View(factura);
-    }
-
-    // GET: FACTURAS/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: FACTURAS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdFactura,Fecha,MontoTotal,IdCliente,cliente")] Factura factura)
-    {
-        if (ModelState.IsValid)
+        // GET: FACTURAS/Create
+        public IActionResult Create()
         {
-            _context.Add(factura);
-            await _context.SaveChangesAsync();
+            return View();
+        }
+
+        // POST: FACTURAS/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Factura factura)
+        {
+            if (ModelState.IsValid)
+            {
+                // Serializa y envía el objeto Factura en un paquete JSON por POST hacia la API
+                CRUD<Factura>.Create(factura);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(factura);
+        }
+
+        // GET: FACTURAS/Edit/5
+        public IActionResult Edit(int id)
+        {
+            var factura = CRUD<Factura>.GetById(id);
+            if (factura == null)
+            {
+                return NotFound();
+            }
+            return View(factura);
+        }
+
+        // POST: FACTURAS/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, [Bind("IdFactura,Fecha,MontoTotal,IdCliente")] Factura factura)
+        {
+            if (id != factura.IdFactura)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Envía la información modificada usando el método HTTP PUT
+                    CRUD<Factura>.Update(id, factura);
+                }
+                catch
+                {
+                    return View(factura);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(factura);
+        }
+
+        // GET: FACTURAS/Delete/5
+        public IActionResult Delete(int id)
+        {
+            var factura = CRUD<Factura>.GetById(id);
+            if (factura == null)
+            {
+                return NotFound();
+            }
+
+            return View(factura);
+        }
+
+        // POST: FACTURAS/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            // Envía la instrucción de eliminación física mediante HTTP DELETE a la API
+            CRUD<Factura>.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-        return View(factura);
-    }
-
-    // GET: FACTURAS/Edit/5
-    public async Task<IActionResult> Edit(int? idfactura)
-    {
-        if (idfactura == null)
-        {
-            return NotFound();
-        }
-
-        var factura = await _context.Factura.FindAsync(idfactura);
-        if (factura == null)
-        {
-            return NotFound();
-        }
-        return View(factura);
-    }
-
-    // POST: FACTURAS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? idfactura, [Bind("IdFactura,Fecha,MontoTotal,IdCliente,cliente")] Factura factura)
-    {
-        if (idfactura != factura.IdFactura)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(factura);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FacturaExists(factura.IdFactura))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(factura);
-    }
-
-    // GET: FACTURAS/Delete/5
-    public async Task<IActionResult> Delete(int? idfactura)
-    {
-        if (idfactura == null)
-        {
-            return NotFound();
-        }
-
-        var factura = await _context.Factura
-            .FirstOrDefaultAsync(m => m.IdFactura == idfactura);
-        if (factura == null)
-        {
-            return NotFound();
-        }
-
-        return View(factura);
-    }
-
-    // POST: FACTURAS/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? idfactura)
-    {
-        var factura = await _context.Factura.FindAsync(idfactura);
-        if (factura != null)
-        {
-            _context.Factura.Remove(factura);
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool FacturaExists(int? idfactura)
-    {
-        return _context.Factura.Any(e => e.IdFactura == idfactura);
     }
 }

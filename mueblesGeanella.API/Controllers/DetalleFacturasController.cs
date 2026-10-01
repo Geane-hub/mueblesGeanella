@@ -1,145 +1,94 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mueblesGeanella.Modelos;
 
-public class DetalleFacturasController : Controller
+[Route("api/[controller]")]
+[ApiController]
+public class DetalleFacturasController : ControllerBase
 {
     private readonly mueblesGeanellaAPIContext _context;
-
     public DetalleFacturasController(mueblesGeanellaAPIContext context)
     {
         _context = context;
     }
 
-    // GET: DETALLEFACTURAS
-    public async Task<IActionResult> Index()    
+    // GET: api/DetalleFactura
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<DetalleFactura>>> GetDetalleFactura()
     {
-        return View(await _context.DetalleFactura.ToListAsync());
+        return await _context.DetalleFactura.ToListAsync();
     }
 
-    // GET: DETALLEFACTURAS/Details/5
-    public async Task<IActionResult> Details(int? iddetalle)
+    // GET: api/DetalleFactura/5
+    [HttpGet("{iddetalle}")]
+    public async Task<ActionResult<DetalleFactura>> GetDetalleFactura(int iddetalle)
     {
-        if (iddetalle == null)
-        {
-            return NotFound();
-        }
-
-        var detallefactura = await _context.DetalleFactura
-            .FirstOrDefaultAsync(m => m.IdDetalle == iddetalle);
-        if (detallefactura == null)
-        {
-            return NotFound();
-        }
-
-        return View(detallefactura);
-    }
-
-    // GET: DETALLEFACTURAS/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: DETALLEFACTURAS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdDetalle,Cantidad,Precio,IdFactura,factura,IdProducto,producto")] DetalleFactura detallefactura)
-    {
-        if (ModelState.IsValid)
-        {
-            _context.Add(detallefactura);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(detallefactura);
-    }
-
-    // GET: DETALLEFACTURAS/Edit/5
-    public async Task<IActionResult> Edit(int? iddetalle)
-    {
-        if (iddetalle == null)
-        {
-            return NotFound();
-        }
-
         var detallefactura = await _context.DetalleFactura.FindAsync(iddetalle);
+
         if (detallefactura == null)
         {
             return NotFound();
         }
-        return View(detallefactura);
+
+        return detallefactura;
     }
 
-    // POST: DETALLEFACTURAS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? iddetalle, [Bind("IdDetalle,Cantidad,Precio,IdFactura,factura,IdProducto,producto")] DetalleFactura detallefactura)
+    // PUT: api/DetalleFactura/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{iddetalle}")]
+    public async Task<IActionResult> PutDetalleFactura(int? iddetalle, DetalleFactura detallefactura)
     {
         if (iddetalle != detallefactura.IdDetalle)
         {
-            return NotFound();
+            return BadRequest();
         }
 
-        if (ModelState.IsValid)
+        _context.Entry(detallefactura).State = EntityState.Modified;
+
+        try
         {
-            try
-            {
-                _context.Update(detallefactura);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DetalleFacturaExists(detallefactura.IdDetalle))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            await _context.SaveChangesAsync();
         }
-        return View(detallefactura);
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!DetalleFacturaExists(iddetalle))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return NoContent();
     }
 
-    // GET: DETALLEFACTURAS/Delete/5
-    public async Task<IActionResult> Delete(int? iddetalle)
+    // POST: api/DetalleFactura
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<DetalleFactura>> PostDetalleFactura(DetalleFactura detallefactura)
     {
-        if (iddetalle == null)
-        {
-            return NotFound();
-        }
+        _context.DetalleFactura.Add(detallefactura);
+        await _context.SaveChangesAsync();
 
-        var detallefactura = await _context.DetalleFactura
-            .FirstOrDefaultAsync(m => m.IdDetalle == iddetalle);
+        return CreatedAtAction("GetDetalleFactura", new { iddetalle = detallefactura.IdDetalle }, detallefactura);
+    }
+
+    // DELETE: api/DetalleFactura/5
+    [HttpDelete("{iddetalle}")]
+    public async Task<IActionResult> DeleteDetalleFactura(int? iddetalle)
+    {
+        var detallefactura = await _context.DetalleFactura.FindAsync(iddetalle);
         if (detallefactura == null)
         {
             return NotFound();
         }
 
-        return View(detallefactura);
-    }
-
-    // POST: DETALLEFACTURAS/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? iddetalle)
-    {
-        var detallefactura = await _context.DetalleFactura.FindAsync(iddetalle);
-        if (detallefactura != null)
-        {
-            _context.DetalleFactura.Remove(detallefactura);
-        }
-
+        _context.DetalleFactura.Remove(detallefactura);
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        return NoContent();
     }
 
     private bool DetalleFacturaExists(int? iddetalle)

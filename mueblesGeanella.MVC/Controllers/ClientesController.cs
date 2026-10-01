@@ -1,149 +1,110 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using mueblesGeanella.CONSUMER;
 using mueblesGeanella.Modelos;
 
-public class ClientesController : Controller
+namespace mueblesGeanella.MVC.Controllers
 {
-    private readonly mueblesGeanellaMVCContext _context;
-
-    public ClientesController(mueblesGeanellaMVCContext context)
+    public class ClientesController : Controller
     {
-        _context = context;
-    }
 
-    // GET: CLIENTES
-    public async Task<IActionResult> Index()    
-    {
-        return View(await _context.Cliente.ToListAsync());
-    }
-
-    // GET: CLIENTES/Details/5
-    public async Task<IActionResult> Details(int? idcliente)
-    {
-        if (idcliente == null)
+        // GET: CLIENTES
+        public IActionResult Index()
         {
-            return NotFound();
+            // Llama a la API mediante HTTP GET y le pasa la lista de objetos a la vista
+            var lista = CRUD<Cliente>.GetAll();
+            return View(lista);
         }
 
-        var cliente = await _context.Cliente
-            .FirstOrDefaultAsync(m => m.IdCliente == idcliente);
-        if (cliente == null)
+        // GET: CLIENTES/Details/5
+        public IActionResult Details(int id)
         {
-            return NotFound();
+            var cliente = CRUD<Cliente>.GetById(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            return View(cliente);
         }
 
-        return View(cliente);
-    }
-
-    // GET: CLIENTES/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: CLIENTES/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
-    {
-        if (ModelState.IsValid)
+        // GET: CLIENTES/Create
+        public IActionResult Create()
         {
-            _context.Add(cliente);
-            await _context.SaveChangesAsync();
+            return View();
+        }
+
+        // POST: CLIENTES/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create([Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
+        {
+            if (ModelState.IsValid)
+            {
+                // Envía el nuevo cliente en formato JSON hacia la API
+                CRUD<Cliente>.Create(cliente);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(cliente);
+        }
+
+        // GET: CLIENTES/Edit/5
+        public IActionResult Edit(int id)
+        {
+            var cliente = CRUD<Cliente>.GetById(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            return View(cliente);
+        }
+
+        // POST: CLIENTES/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, [Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
+        {
+            if (id != cliente.IdCliente)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Envía la actualización del cliente mediante HTTP PUT a la API
+                    CRUD<Cliente>.Update(id, cliente);
+                }
+                catch
+                {
+                    // Si ocurre un error de red o de base de datos remoto
+                    return View(cliente);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(cliente);
+        }
+
+        // GET: CLIENTES/Delete/5
+        public IActionResult Delete(int id)
+        {
+            var cliente = CRUD<Cliente>.GetById(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            return View(cliente);
+        }
+
+        // POST: CLIENTES/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            // Envía la orden de eliminación mediante HTTP DELETE a la API
+            CRUD<Cliente>.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-        return View(cliente);
-    }
-
-    // GET: CLIENTES/Edit/5
-    public async Task<IActionResult> Edit(int? idcliente)
-    {
-        if (idcliente == null)
-        {
-            return NotFound();
-        }
-
-        var cliente = await _context.Cliente.FindAsync(idcliente);
-        if (cliente == null)
-        {
-            return NotFound();
-        }
-        return View(cliente);
-    }
-
-    // POST: CLIENTES/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? idcliente, [Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
-    {
-        if (idcliente != cliente.IdCliente)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(cliente);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClienteExists(cliente.IdCliente))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(cliente);
-    }
-
-    // GET: CLIENTES/Delete/5
-    public async Task<IActionResult> Delete(int? idcliente)
-    {
-        if (idcliente == null)
-        {
-            return NotFound();
-        }
-
-        var cliente = await _context.Cliente
-            .FirstOrDefaultAsync(m => m.IdCliente == idcliente);
-        if (cliente == null)
-        {
-            return NotFound();
-        }
-
-        return View(cliente);
-    }
-
-    // POST: CLIENTES/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? idcliente)
-    {
-        var cliente = await _context.Cliente.FindAsync(idcliente);
-        if (cliente != null)
-        {
-            _context.Cliente.Remove(cliente);
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool ClienteExists(int? idcliente)
-    {
-        return _context.Cliente.Any(e => e.IdCliente == idcliente);
     }
 }

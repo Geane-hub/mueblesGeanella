@@ -1,145 +1,94 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mueblesGeanella.Modelos;
 
-public class ClientesController : Controller
+[Route("api/[controller]")]
+[ApiController]
+public class ClientesController : ControllerBase
 {
     private readonly mueblesGeanellaAPIContext _context;
-
     public ClientesController(mueblesGeanellaAPIContext context)
     {
         _context = context;
     }
 
-    // GET: CLIENTES
-    public async Task<IActionResult> Index()    
+    // GET: api/Cliente
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
     {
-        return View(await _context.Cliente.ToListAsync());
+        return await _context.Cliente.ToListAsync();
     }
 
-    // GET: CLIENTES/Details/5
-    public async Task<IActionResult> Details(int? idcliente)
+    // GET: api/Cliente/5
+    [HttpGet("{idcliente}")]
+    public async Task<ActionResult<Cliente>> GetCliente(int idcliente)
     {
-        if (idcliente == null)
-        {
-            return NotFound();
-        }
-
-        var cliente = await _context.Cliente
-            .FirstOrDefaultAsync(m => m.IdCliente == idcliente);
-        if (cliente == null)
-        {
-            return NotFound();
-        }
-
-        return View(cliente);
-    }
-
-    // GET: CLIENTES/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: CLIENTES/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
-    {
-        if (ModelState.IsValid)
-        {
-            _context.Add(cliente);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(cliente);
-    }
-
-    // GET: CLIENTES/Edit/5
-    public async Task<IActionResult> Edit(int? idcliente)
-    {
-        if (idcliente == null)
-        {
-            return NotFound();
-        }
-
         var cliente = await _context.Cliente.FindAsync(idcliente);
+
         if (cliente == null)
         {
             return NotFound();
         }
-        return View(cliente);
+
+        return cliente;
     }
 
-    // POST: CLIENTES/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? idcliente, [Bind("IdCliente,Cedula,Nombre,Apellido,Telefono,Direccion,email")] Cliente cliente)
+    // PUT: api/Cliente/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{idcliente}")]
+    public async Task<IActionResult> PutCliente(int? idcliente, Cliente cliente)
     {
         if (idcliente != cliente.IdCliente)
         {
-            return NotFound();
+            return BadRequest();
         }
 
-        if (ModelState.IsValid)
+        _context.Entry(cliente).State = EntityState.Modified;
+
+        try
         {
-            try
-            {
-                _context.Update(cliente);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClienteExists(cliente.IdCliente))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            await _context.SaveChangesAsync();
         }
-        return View(cliente);
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ClienteExists(idcliente))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return NoContent();
     }
 
-    // GET: CLIENTES/Delete/5
-    public async Task<IActionResult> Delete(int? idcliente)
+    // POST: api/Cliente
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
     {
-        if (idcliente == null)
-        {
-            return NotFound();
-        }
+        _context.Cliente.Add(cliente);
+        await _context.SaveChangesAsync();
 
-        var cliente = await _context.Cliente
-            .FirstOrDefaultAsync(m => m.IdCliente == idcliente);
+        return CreatedAtAction("GetCliente", new { idcliente = cliente.IdCliente }, cliente);
+    }
+
+    // DELETE: api/Cliente/5
+    [HttpDelete("{idcliente}")]
+    public async Task<IActionResult> DeleteCliente(int? idcliente)
+    {
+        var cliente = await _context.Cliente.FindAsync(idcliente);
         if (cliente == null)
         {
             return NotFound();
         }
 
-        return View(cliente);
-    }
-
-    // POST: CLIENTES/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? idcliente)
-    {
-        var cliente = await _context.Cliente.FindAsync(idcliente);
-        if (cliente != null)
-        {
-            _context.Cliente.Remove(cliente);
-        }
-
+        _context.Cliente.Remove(cliente);
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        return NoContent();
     }
 
     private bool ClienteExists(int? idcliente)

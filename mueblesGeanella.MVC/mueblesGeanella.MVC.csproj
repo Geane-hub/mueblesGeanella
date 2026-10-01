@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mueblesGeanella.API\mueblesGeanella.API.csproj" />
+    <ProjectReference Include="..\mueblesGeanella.CONSUMER\mueblesGeanella.CONSUMER.csproj" />
     <ProjectReference Include="..\mueblesGeanella.Modelos\mueblesGeanella.Modelos.csproj" />
   </ItemGroup>
 
