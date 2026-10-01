@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="mueblesGeanella.API/mueblesGeanella.API.csproj" Id="ebefbb16-90d8-4922-b11a-f955444ddfce" />
+  <Project Path="mueblesGeanella.CONSUMER/mueblesGeanella.CONSUMER.csproj" Id="3b1d1d08-4840-4e19-bce9-c52c67f3cb30" />
   <Project Path="mueblesGeanella.Modelos/mueblesGeanella.Modelos.csproj" />
 </Solution>

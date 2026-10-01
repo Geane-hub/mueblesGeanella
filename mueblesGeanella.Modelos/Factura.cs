@@ -24,9 +24,9 @@ namespace mueblesGeanella.Modelos
         public decimal MontoTotal { get; set; }
         
         //Llave foranea
-        [ForeignKey("citas")]
+        [ForeignKey("clientes")]
         [Column("id_cliente")]
-        public int IdCita { get; set; }
+        public int IdCliente { get; set; }
         public Cliente? cliente { get; set; }
 
 
