@@ -9,13 +9,14 @@ namespace mueblesGeanella.CONSUMER
 {
     public static class CRUD<T>
     {
-            public static string Endpoint { get; set; }
+        // Almacena la dirección URL de la API con la que se va a comunicar.
+        public static string Endpoint { get; set; }
 
             public static List<T> GetAll()
             {
                 using (var cliente = new HttpClient())
                 {
-                    var response = cliente.GetAsync(Endpoint).Result;
+                    var response = cliente.GetAsync(Endpoint).Result; //buscar por ID
                     if (response.IsSuccessStatusCode)
                     {
                         var json = response.Content.ReadAsStringAsync().Result;
