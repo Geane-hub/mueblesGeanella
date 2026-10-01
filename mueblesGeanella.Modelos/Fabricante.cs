@@ -33,7 +33,7 @@ namespace mueblesGeanella.Modelos
         [Required]
         [Column("telefono")]
         [MaxLength(10)]
-        public int Telefono { get; set; }
+        public string Telefono { get; set; }
 
 
     }

@@ -13,7 +13,7 @@ namespace mueblesGeanella.Modelos
     {
         [Key]
         [Column("id_detalle")]
-        public int IdDtalle { get; set; }
+        public int IdDetalle { get; set; }
 
         [Required]
         [Column("cantidad")]

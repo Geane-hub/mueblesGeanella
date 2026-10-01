@@ -27,8 +27,8 @@ namespace mueblesGeanella.Modelos
 
         [Required]
         [Column("telefono")]
-        [MaxLength (100)]
-        public int Telefono {  get; set; }
+        [MaxLength (10)]
+        public string Telefono {  get; set; }
 
         [Required]
         [Column("direccion")]
