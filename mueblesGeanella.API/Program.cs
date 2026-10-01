@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 
 namespace mueblesGeanella.API
 {
@@ -6,6 +7,9 @@ namespace mueblesGeanella.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("mueblesGeanellaAPIContext") ?? throw new InvalidOperationException("Connection string 'mueblesGeanellaAPIContext' not found.");
+
+            builder.Services.AddDbContext<mueblesGeanellaAPIContext>(options => options.UseNpgsql(connectionString));
 
             // Add services to the container.
 
