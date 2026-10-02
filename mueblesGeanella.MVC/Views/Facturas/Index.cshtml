@@ -13,35 +13,52 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Fecha)
+                Fecha
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MontoTotal)
+                MontoTotal
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdCliente)
+                Nombre_Producto
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.cliente)
+                Nombre_Cliente
             </th>
-            <th></th>
+            <th>
+                Apellido_Cliente
+            </th>
+            <th>
+                Cedula_Cliente
+            </th>
+            <th>
+                Correo_Cliente
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.Fecha)
+                @item.Fecha
             </td>
             <td>
-                @Html.DisplayFor(model => item.MontoTotal)
+                @item.MontoTotal
+            </td>
+                <td>
+                    @(item.DetalleFacturas != null ? $"{item.DetalleFacturas}" : "Sin Asignar")
+                </td>
+            <td>
+                @(item.cliente != null ? $"{item.cliente.Nombre}":"Sin Asignar")
             </td>
             <td>
-                @Html.DisplayFor(model => item.IdCliente)
+                 @(item.cliente != null ? $"{item.cliente.Apellido}" : "Sin Asignar")
             </td>
-            <td>
-                @Html.DisplayFor(model => item.cliente)
-            </td>
+                <td>
+                    @(item.cliente != null ? $"{item.cliente.Cedula}" : "Sin Asignar")
+                </td>
+                <td>
+                    @(item.cliente != null ? $"{item.cliente.email}" : "Sin Asignar")
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdFactura">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.IdFactura">Details</a> |

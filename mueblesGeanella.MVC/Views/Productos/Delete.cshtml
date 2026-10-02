@@ -7,6 +7,7 @@
 <h1>Delete</h1>
 
 <h3>Esta seguro que quiere eliminar esta informacion?</h3>
+<div asp-validation-summary="All" class="text-danger"></div>
 <div>
     <h4>mueblesGeanella.Modelos.Producto</h4>
     <hr />
@@ -40,14 +41,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Model.Stock
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Fabricante
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.fabricante
         </dd>
     </dl>
     <form asp-action="Delete">

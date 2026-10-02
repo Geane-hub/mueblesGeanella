@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,7 +24,7 @@ namespace mueblesGeanella.Modelos
         public decimal MontoTotal { get; set; }
         
         //Llave foranea
-        [ForeignKey("clientes")]
+        [ForeignKey("cliente")]
         [Column("id_cliente")]
         public int IdCliente { get; set; }
         public Cliente? cliente { get; set; }

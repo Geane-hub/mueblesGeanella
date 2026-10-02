@@ -11,6 +11,7 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
+            <input type="hidden" asp-for="IdProducto" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <!--Nombre-->
@@ -50,10 +51,15 @@
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
 
+            <!--Fabricante-->
             <div class="form-group">
-                <label asp-for="fabricante" class="control-label"></label>
-                <input asp-for="fabricante" class="form-control" />
-                <span asp-validation-for="fabricante" class="text-danger"></span>
+                <label asp-for="IdFabricante" class="control-label"></label>
+
+                <select asp-for="IdFabricante" class="form-control" asp-items="ViewBag.idFabricante">
+                    <option value="">Seleccione un fabricante</option>
+                </select>
+
+                <span asp-validation-for="IdFabricante" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Editar producto" class="btn btn-primary w-100" />

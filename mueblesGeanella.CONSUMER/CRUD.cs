@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +24,8 @@ namespace mueblesGeanella.CONSUMER
                     }
                     else
                     {
-                        throw new Exception($"Error: {response.StatusCode} ");
+                        var errorBody = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Error: {response.StatusCode}. Details: {errorBody}");
                     }
 
                 }
@@ -94,9 +95,15 @@ namespace mueblesGeanella.CONSUMER
                     {
                         return true;
                     }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        var errorBody = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception(errorBody);
+                    }
                     else
                     {
-                        throw new Exception($"Error: {response.StatusCode} ");
+                        var errorBody = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Error: {response.StatusCode}. Detalle: {errorBody}");
                     }
                 }
             }

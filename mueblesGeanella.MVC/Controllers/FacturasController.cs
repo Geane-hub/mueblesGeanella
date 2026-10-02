@@ -13,6 +13,12 @@ namespace mueblesGeanella.MVC.Controllers
         {
             // Solicita a la API todas las facturas registradas mediante HTTP GET
             var lista = CRUD<Factura>.GetAll();
+            var clientes = CRUD<Cliente>.GetAll();
+            foreach(var factura in lista)
+            {
+                factura.cliente = clientes
+                    .FirstOrDefault(c => c.IdCliente == factura.IdCliente);
+            }
             return View(lista);
         }
 

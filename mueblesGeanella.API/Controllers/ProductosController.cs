@@ -86,7 +86,14 @@ public class ProductosController : ControllerBase
         }
 
         _context.Producto.Remove(producto);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            return BadRequest("No se puede eliminar el producto porque está asociado a otros registros (por ejemplo, en Detalles de Factura). Elimine primero las referencias.");
+        }
 
         return NoContent();
     }

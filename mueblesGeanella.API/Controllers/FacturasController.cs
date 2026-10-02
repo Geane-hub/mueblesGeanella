@@ -14,9 +14,17 @@ public class FacturasController : ControllerBase
 
     // GET: api/Factura
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Factura>>> GetFactura()
+    public async Task<ActionResult> GetFactura()
     {
-        return await _context.Factura.ToListAsync();
+        try
+        {
+            var facturas = await _context.Factura.ToListAsync();
+            return Ok(facturas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message, inner = ex.InnerException?.Message });
+        }
     }
 
     // GET: api/Factura/5
