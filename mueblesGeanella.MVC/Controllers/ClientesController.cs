@@ -100,11 +100,28 @@ namespace mueblesGeanella.MVC.Controllers
         // POST: CLIENTES/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int IdCliente)
         {
-            // Envía la orden de eliminación mediante HTTP DELETE a la API
-            CRUD<Cliente>.Delete(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                // Envía la orden de eliminación mediante HTTP DELETE a la API
+                CRUD<Cliente>.Delete(IdCliente);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("fk_facturas_clientes") || ex.Message.Contains("foreign key constraint"))
+                {
+                    ModelState.AddModelError("", "No se puede eliminar este cliente porque tiene facturas asociadas. Por favor, elimine primero las facturas de este cliente.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", $"Error al eliminar el cliente: {ex.Message}");
+                }
+                
+                var cliente = CRUD<Cliente>.GetById(IdCliente);
+                return View(cliente);
+            }
         }
     }
 }
