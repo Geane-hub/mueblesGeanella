@@ -1,10 +1,10 @@
-@model IEnumerable<mueblesGeanella.Modelos.Factura>
+@model IEnumerable<mueblesGeanella.MVC.Controllers.FacturaViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Facturas";
 }
 
-<h1>Index</h1>
+<h1>Facturas</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,59 +12,33 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Fecha
-            </th>
-            <th>
-                MontoTotal
-            </th>
-            <th>
-                Nombre_Producto
-            </th>
-            <th>
-                Nombre_Cliente
-            </th>
-            <th>
-                Apellido_Cliente
-            </th>
-            <th>
-                Cedula_Cliente
-            </th>
-            <th>
-                Correo_Cliente
-            </th>
+            <th>Fecha</th>
+            <th>Monto Total</th>
+            <th>Nombre Producto</th>
+            <th>Nombre Cliente</th>
+            <th>Apellido Cliente</th>
+            <th>Cédula Cliente</th>
+            <th>Correo Cliente</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.Fecha
-            </td>
-            <td>
-                @item.MontoTotal
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Factura.Fecha</td>
+                <td>@item.Factura.MontoTotal</td>
+                <td>@(item.Producto != null ? $"{item.Producto.Nombre}" : "Sin Asignar")</td>
+                <td>@(item.Cliente != null ? $"{item.Cliente.Nombre}" : "Sin Asignar")</td>
+                <td>@(item.Cliente != null ? $"{item.Cliente.Apellido}" : "Sin Asignar")</td>
+                <td>@(item.Cliente != null ? $"{item.Cliente.Cedula}" : "Sin Asignar")</td>
+                <td>@(item.Cliente != null ? $"{item.Cliente.email}" : "Sin Asignar")</td>
                 <td>
-                    @(item.DetalleFacturas != null ? $"{item.DetalleFacturas}" : "Sin Asignar")
+                    <a asp-action="Edit" asp-route-id="@item.Factura.IdFactura">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Factura.IdFactura">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Factura.IdFactura">Delete</a>
                 </td>
-            <td>
-                @(item.cliente != null ? $"{item.cliente.Nombre}":"Sin Asignar")
-            </td>
-            <td>
-                 @(item.cliente != null ? $"{item.cliente.Apellido}" : "Sin Asignar")
-            </td>
-                <td>
-                    @(item.cliente != null ? $"{item.cliente.Cedula}" : "Sin Asignar")
-                </td>
-                <td>
-                    @(item.cliente != null ? $"{item.cliente.email}" : "Sin Asignar")
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdFactura">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFactura">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFactura">Delete</a>
-            </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>

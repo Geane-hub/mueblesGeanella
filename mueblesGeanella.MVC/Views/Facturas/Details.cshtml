@@ -1,7 +1,7 @@
 @model mueblesGeanella.Modelos.Factura
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Detalles de la factura"] = "Details";
 }
 
 <h1>Details</h1>
@@ -11,31 +11,24 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fecha)
+            Fecha
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fecha)
+            @Model.Fecha
         </dd>
     </dl>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MontoTotal)
+            MontoTotal
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoTotal)
+            @Model.MontoTotal
         </dd>
     </dl>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdCliente)
+            Cliente
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdCliente)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.cliente)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.cliente)
+            @Model.cliente
         </dd>
     </dl>
 </div>

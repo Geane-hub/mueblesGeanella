@@ -1,25 +1,45 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using mueblesGeanella.CONSUMER;
 using mueblesGeanella.Modelos;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace mueblesGeanella.MVC.Controllers
 {
+    // 💡 Creamos el ViewModel aquí mismo para que no tengas que crear archivos extra
+    public class FacturaViewModel
+    {
+        public Factura Factura { get; set; }
+        public Cliente Cliente { get; set; }
+        public Producto Producto { get; set; }
+    }
+
     public class FacturasController : Controller
     {
-        // 💡 NOTA: La base de datos es administrada remotamente por la API a través del CONSUMER.
-
         // GET: FACTURAS
         public IActionResult Index()
         {
-            // Solicita a la API todas las facturas registradas mediante HTTP GET
-            var lista = CRUD<Factura>.GetAll();
-            var clientes = CRUD<Cliente>.GetAll();
-            foreach(var factura in lista)
+            var lista = CRUD<Factura>.GetAll() ?? new List<Factura>();
+            var clientes = CRUD<Cliente>.GetAll() ?? new List<Cliente>();
+            var productos = CRUD<Producto>.GetAll() ?? new List<Producto>();
+
+            var listaViewModel = new List<FacturaViewModel>();
+
+            foreach (var factura in lista)
             {
-                factura.cliente = clientes
-                    .FirstOrDefault(c => c.IdCliente == factura.IdCliente);
+                var clienteAsignado = clientes.FirstOrDefault(c => c.IdCliente == factura.IdCliente);
+                var productoAsignado = productos.FirstOrDefault(p => p.PrecioUnitario == factura.MontoTotal);
+
+                listaViewModel.Add(new FacturaViewModel
+                {
+                    Factura = factura,
+                    Cliente = clienteAsignado,
+                    Producto = productoAsignado
+                });
             }
-            return View(lista);
+
+            return View(listaViewModel); 
         }
 
         // GET: FACTURAS/Details/5
@@ -31,12 +51,20 @@ namespace mueblesGeanella.MVC.Controllers
                 return NotFound();
             }
 
+            var cliente = CRUD<Cliente>.GetById(factura.IdCliente);
+            if (cliente != null)
+            {
+                factura.cliente = cliente;
+            }
+
             return View(factura);
         }
 
         // GET: FACTURAS/Create
         public IActionResult Create()
         {
+            var clientes = CRUD<Cliente>.GetAll() ?? new List<Cliente>();
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre");
             return View();
         }
 
@@ -47,10 +75,12 @@ namespace mueblesGeanella.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Serializa y envía el objeto Factura en un paquete JSON por POST hacia la API
                 CRUD<Factura>.Create(factura);
                 return RedirectToAction(nameof(Index));
             }
+
+            var clientes = CRUD<Cliente>.GetAll() ?? new List<Cliente>();
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", factura.IdCliente);
             return View(factura);
         }
 
@@ -58,10 +88,20 @@ namespace mueblesGeanella.MVC.Controllers
         public IActionResult Edit(int id)
         {
             var factura = CRUD<Factura>.GetById(id);
+
             if (factura == null)
             {
-                return NotFound();
+                var todasLasListas = CRUD<Factura>.GetAll() ?? new List<Factura>();
+                factura = todasLasListas.FirstOrDefault(f => f.IdFactura == id);
             }
+
+            if (factura == null)
+            {
+                return Content($"Error crítico: La factura con ID {id} no existe en la base de datos.");
+            }
+
+            var clientes = CRUD<Cliente>.GetAll() ?? new List<Cliente>();
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", factura.IdCliente);
             return View(factura);
         }
 
@@ -79,15 +119,17 @@ namespace mueblesGeanella.MVC.Controllers
             {
                 try
                 {
-                    // Envía la información modificada usando el método HTTP PUT
                     CRUD<Factura>.Update(id, factura);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
-                    return View(factura);
+                    // Manejo del error
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            var clientes = CRUD<Cliente>.GetAll() ?? new List<Cliente>();
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", factura.IdCliente);
             return View(factura);
         }
 
@@ -100,6 +142,12 @@ namespace mueblesGeanella.MVC.Controllers
                 return NotFound();
             }
 
+            var cliente = CRUD<Cliente>.GetById(factura.IdCliente);
+            if (cliente != null)
+            {
+                factura.cliente = cliente;
+            }
+
             return View(factura);
         }
 
@@ -108,7 +156,6 @@ namespace mueblesGeanella.MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            // Envía la instrucción de eliminación física mediante HTTP DELETE a la API
             CRUD<Factura>.Delete(id);
             return RedirectToAction(nameof(Index));
         }

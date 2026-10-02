@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering; // Simplifica la declaración de SelectList
+using Microsoft.AspNetCore.Mvc.Rendering;
 using mueblesGeanella.CONSUMER;
 using mueblesGeanella.Modelos;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace mueblesGeanella.MVC.Controllers
                 return NotFound();
             }
 
-            // Opcional: Cargar el fabricante para mostrarlo en los detalles
+            // Cargar el fabricante para mostrarlo en los detalles
             var fabricante = CRUD<Fabricante>.GetById(producto.IdFabricante);
             if (fabricante != null)
             {
@@ -44,7 +44,6 @@ namespace mueblesGeanella.MVC.Controllers
         // GET: PRODUCTOS/Create
         public IActionResult Create()
         {
-            // Corregido: Se debe enviar la lista de fabricantes a la vista para el DropDownList
             var listaFabricantes = CRUD<Fabricante>.GetAll() ?? new List<Fabricante>();
             ViewBag.IdFabricante = new SelectList(listaFabricantes, "IdFabricante", "Nombre");
             return View();
@@ -61,7 +60,6 @@ namespace mueblesGeanella.MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Si falla, recargar la lista de fabricantes antes de volver a la vista
             var listaFabricantes = CRUD<Fabricante>.GetAll() ?? new List<Fabricante>();
             ViewBag.IdFabricante = new SelectList(listaFabricantes, "IdFabricante", "Nombre", producto.IdFabricante);
             return View(producto);
@@ -72,7 +70,6 @@ namespace mueblesGeanella.MVC.Controllers
         {
             var producto = CRUD<Producto>.GetById(id);
 
-            // Simplificado: Si GetById no funciona, busca en la lista completa
             if (producto == null)
             {
                 var todasLasListas = CRUD<Producto>.GetAll() ?? new List<Producto>();
@@ -85,7 +82,6 @@ namespace mueblesGeanella.MVC.Controllers
             }
 
             var listaFabricantes = CRUD<Fabricante>.GetAll() ?? new List<Fabricante>();
-            // Corregido: Uso de la directiva 'using Microsoft.AspNetCore.Mvc.Rendering;' para limpiar el código
             ViewBag.IdFabricante = new SelectList(listaFabricantes, "IdFabricante", "Nombre", producto.IdFabricante);
 
             return View(producto);
@@ -114,14 +110,12 @@ namespace mueblesGeanella.MVC.Controllers
                 }
             }
 
-            // Corregido: Si el modelo es inválido o falla el Update, rellenar el ViewBag para evitar errores en la vista
             var listaFabricantes = CRUD<Fabricante>.GetAll() ?? new List<Fabricante>();
             ViewBag.IdFabricante = new SelectList(listaFabricantes, "IdFabricante", "Nombre", producto.IdFabricante);
             return View(producto);
         }
 
         // GET: PRODUCTOS/Delete/5
-        // Corregido: Eliminado el parámetro "Producto producto" que rompía la firma de la ruta clásica de MVC
         public IActionResult Delete(int id)
         {
             var producto = CRUD<Producto>.GetById(id);
