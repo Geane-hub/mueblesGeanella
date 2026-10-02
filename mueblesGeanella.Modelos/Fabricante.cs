@@ -35,6 +35,7 @@ namespace mueblesGeanella.Modelos
         [MaxLength(10)]
         public string Telefono { get; set; }
 
-
+        //relaciones
+        public List<Producto> Productos { get; set; } = new List<Producto>();
     }
 }

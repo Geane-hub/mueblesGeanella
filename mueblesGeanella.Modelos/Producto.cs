@@ -38,5 +38,7 @@ namespace mueblesGeanella.Modelos
         public int IdFabricante { get; set; }
         public Fabricante? fabricante { get; set; }
 
+        //relaciones
+        public List<DetalleFactura> DetalleFacturas { get; set; } = new List<DetalleFactura>();
     }
 }

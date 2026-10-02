@@ -33,5 +33,6 @@ namespace mueblesGeanella.Modelos
         [Column("id_producto")]
         public int IdProducto { get; set; }
         public Producto? producto { get; set; }
+
     }
 }

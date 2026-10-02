@@ -29,6 +29,7 @@ namespace mueblesGeanella.Modelos
         public int IdCliente { get; set; }
         public Cliente? cliente { get; set; }
 
-
+        //relaciones
+        public List<DetalleFactura>? DetalleFacturas { get; set; } = new List<DetalleFactura>();
     }
 }

@@ -1,0 +1,23 @@
+﻿@model mueblesGeanella.MVC.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="container mt-5">
+    <h1 class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Error.</h1>
+    <h2 class="text-danger">Ocurrió un problema al procesar tu solicitud.</h2>
+
+    @if (Model.ShowRequestId)
+    {
+        <div class="alert alert-secondary mt-3">
+            <strong>ID de la solicitud:</strong> <code>@Model.RequestId</code>
+        </div>
+    }
+
+    <div class="mt-4 card p-3 bg-light text-muted">
+        <h3>Modo de Desarrollo</h3>
+        <p>
+            Al cambiar al entorno de <strong>Desarrollo</strong> se mostrará información detallada sobre el error ocurrido.
+        </p>
+    </div>
+</div>

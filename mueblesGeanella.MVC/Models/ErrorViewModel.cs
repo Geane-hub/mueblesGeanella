@@ -1,4 +1,4 @@
-namespace ClinicaOdontologica.MVC.Models
+namespace mueblesGeanella.MVC.Models
 {
     public class ErrorViewModel
     {

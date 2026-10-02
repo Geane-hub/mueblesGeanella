@@ -12,39 +12,51 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdProducto" />
+
+            <!--Nombre-->
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+
+            <!--Descripcion-->
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
+
+            <!--Precio unitario-->
             <div class="form-group">
-                <label asp-for="PrecioUnitario" class="control-label"></label>
-                <input asp-for="PrecioUnitario" class="form-control" />
-                <span asp-validation-for="PrecioUnitario" class="text-danger"></span>
+                <label asp-for="PrecioUnitario" class="control-label">
+                    PrecioUnitario
+                </label>
+
+                <input asp-for="PrecioUnitario"
+                       type="number"
+                       step="0.01"
+                       min="0"
+                       class="form-control" />
+
+                <span asp-validation-for="PrecioUnitario"
+                      class="text-danger"></span>
             </div>
+
+            <!--Stock-->
             <div class="form-group">
                 <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
+                <input asp-for="Stock" class="form-control" inputmode="numeric" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IdFabricante" class="control-label"></label>
-                <input asp-for="IdFabricante" class="form-control" />
-                <span asp-validation-for="IdFabricante" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="fabricante" class="control-label"></label>
                 <input asp-for="fabricante" class="form-control" />
                 <span asp-validation-for="fabricante" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Editar producto" class="btn btn-primary w-100" />
             </div>
         </form>
     </div>

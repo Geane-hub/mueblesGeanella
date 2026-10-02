@@ -39,5 +39,8 @@ namespace mueblesGeanella.Modelos
         [Column("email")]
         [MaxLength(100)]
         public string email { get; set; }
+
+        //relaciones
+        public List<Factura>? Facturas { get; set; } = new List<Factura>();
     }
 }
