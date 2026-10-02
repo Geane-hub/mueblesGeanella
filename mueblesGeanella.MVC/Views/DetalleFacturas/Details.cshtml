@@ -1,59 +1,60 @@
-@model mueblesGeanella.Modelos.DetalleFactura
-
+@model mueblesGeanella.Modelos.Factura
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle de Factura";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Factura #@Model.IdFactura</h4>
+            <span>Fecha: @Model.Fecha.ToShortDateString()</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="text-muted">Datos del Cliente</h5>
+                    <p class="mb-1"><strong>Nombre:</strong> @Model.cliente?.Nombre @Model.cliente?.Apellido</p>
+                    <p class="mb-1"><strong>Cédula:</strong> @Model.cliente?.Cedula</p>
+                    <p class="mb-0"><strong>Dirección:</strong> @Model.cliente?.Direccion</p>
+                </div>
+            </div>
 
-<div>
-    <h4>DetalleFactura</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cantidad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cantidad)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFactura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdFactura)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.factura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.factura)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdProducto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdProducto)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.producto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.producto)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdDetalle">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <h5 class="text-muted border-bottom pb-2">Conceptos</h5>
+            <table class="table table-hover table-striped mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Precio Unit.</th>
+                        <th class="text-end">Subtotal</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DetalleFacturas)
+                    {
+                        <tr>
+                            <td>@item.Producto?.Nombre</td>
+                            <td class="text-center">@item.Cantidad</td>
+                            <td class="text-end">@item.PrecioUnitario.ToString("C")</td>
+                            <td class="text-end">@item.Subtotal.ToString("C")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdDetalle" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@item.IdDetalle" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="row mt-4">
+                <div class="col-md-4 offset-md-8 text-end">
+                    <h3 class="fw-bold">Total: <span class="text-success">@Model.MontoTotal.ToString("C")</span></h3>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <a asp-controller="Facturas" asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
 </div>

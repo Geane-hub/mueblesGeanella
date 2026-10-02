@@ -13,16 +13,27 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <!--Cantidad-->
             <div class="form-group">
                 <label asp-for="Cantidad" class="control-label"></label>
-                <input asp-for="Cantidad" class="form-control" />
+                <input asp-for="Cantidad" class="form-control"inputmode="numeric"/>
                 <span asp-validation-for="Cantidad" class="text-danger"></span>
             </div>
 
+            <!--Precio-->
             <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
+                <label asp-for="PrecioUnitario" class="control-label">
+                    Precio
+                </label>
+
+                <input asp-for="PrecioUnitario"
+                       type="number"
+                       step="0.01"
+                       min="0"
+                       class="form-control" />
+
+                <span asp-validation-for="PrecioUnitario"
+                      class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -32,21 +43,20 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="factura" class="control-label"></label>
-                <input asp-for="factura" class="form-control" />
-                <span asp-validation-for="factura" class="text-danger"></span>
+                <label asp-for="Factura" class="control-label"></label>
+                <input asp-for="Factura" class="form-control" />
+                <span asp-validation-for="Factura" class="text-danger"></span>
             </div>
 
+            <!--Producto-->
             <div class="form-group">
-                <label asp-for="IdProducto" class="control-label"></label>
-                <input asp-for="IdProducto" class="form-control" />
-                <span asp-validation-for="IdProducto" class="text-danger"></span>
-            </div>
+                <label asp-for="Producto" class="control-label"></label>
 
-            <div class="form-group">
-                <label asp-for="producto" class="control-label"></label>
-                <input asp-for="producto" class="form-control" />
-                <span asp-validation-for="producto" class="text-danger"></span>
+                <select asp-for="Producto" class="form-control" asp-items="ViewBag.IdProducto">
+                    <option value="">Seleccione un producto</option>
+                </select>
+
+                <span asp-validation-for="Producto" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

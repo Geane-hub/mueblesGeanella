@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mueblesGeanella.Modelos
 {
-    [Table("detalle_factura")]
+    [Table("detalle_facturas")] 
     public class DetalleFactura
     {
         [Key]
@@ -21,18 +16,21 @@ namespace mueblesGeanella.Modelos
 
         [Required]
         [Column("precio", TypeName = "numeric(10,2)")]
-        public decimal Precio { get; set; }
+        public decimal PrecioUnitario { get; set; } 
 
-        //Llave foranea
-        [ForeignKey("factura")]
+        // Llave foranea a Factura
+        [ForeignKey("Factura")]
         [Column("id_factura")]
         public int IdFactura { get; set; }
-        public Factura? factura { get; set; }
+        public Factura? Factura { get; set; }
 
-        [ForeignKey("producto")]
+        // Llave foranea a Producto
+        [ForeignKey("Producto")]
         [Column("id_producto")]
         public int IdProducto { get; set; }
-        public Producto? producto { get; set; }
+        public Producto? Producto { get; set; }
 
+        [NotMapped]
+        public decimal Subtotal => Cantidad * PrecioUnitario;
     }
 }
