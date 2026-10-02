@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace mueblesGeanella.MVC.Controllers
 {
-    // 💡 Creamos el ViewModel aquí mismo para que no tengas que crear archivos extra
     public class FacturaViewModel
     {
         public Factura Factura { get; set; }

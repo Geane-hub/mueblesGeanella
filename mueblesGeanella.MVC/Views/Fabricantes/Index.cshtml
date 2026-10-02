@@ -1,7 +1,7 @@
 @model IEnumerable<mueblesGeanella.Modelos.Fabricante>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Fabricante"] = "Fabricante";
 }
 
 <h1>Index</h1>
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                Nombre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Apellido)
+                Apellido
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Servicio)
+                Servicio
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Telefono)
+                Telefono
             </th>
             <th></th>
         </tr>
@@ -31,16 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.Nombre)
+                @item.Nombre
             </td>
             <td>
-                @Html.DisplayFor(model => item.Apellido)
+                @item.Apellido
             </td>
             <td>
-                @Html.DisplayFor(model => item.Servicio)
+                @item.Servicio
             </td>
             <td>
-                @Html.DisplayFor(model => item.Telefono)
+                @item.Telefono
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdFabricante">Edit</a> |
