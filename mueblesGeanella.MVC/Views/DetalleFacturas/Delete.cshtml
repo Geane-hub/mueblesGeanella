@@ -38,8 +38,10 @@
                             <td class="text-end">@item.PrecioUnitario.ToString("C")</td>
                             <td class="text-end fw-bold">@item.Subtotal.ToString("C")</td>
                             <td class="text-center pe-3">
-                                <!-- Redirige a los detalles de la factura a la que pertenece este renglón -->
-                                <a asp-action="Details" asp-route-id="@item.IdFactura" class="btn btn-sm btn-info text-white">Ver Factura Completa</a>
+                                <!-- Acciones CRUD -->
+                                <a asp-action="Edit" asp-route-id="@item.IdDetalle">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.IdDetalle">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.IdDetalle">Delete</a>
                             </td>
                         </tr>
                     }
